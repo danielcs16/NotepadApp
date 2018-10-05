@@ -53,18 +53,19 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
-            FORMULARIO_REQUEST_CODE
+            FORMULARIO_REQUEST_CODE -> {
 
 
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    mainViewModel.buscarTodos()
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        mainViewModel.buscarTodos()
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        Toast.makeText(this, "Cancelou", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                Activity.RESULT_CANCELED -> {
-                    Toast.makeText(this, "Cancelou", Toast.LENGTH_SHORT).show()
-                }
+
             }
-
         }
 
 
