@@ -1,7 +1,9 @@
 package com.example.logonrmlocal.notepadapp.view.main
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -9,8 +11,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.example.logonrmlocal.notepadapp.R
 import com.example.logonrmlocal.notepadapp.model.Nota
+import com.example.logonrmlocal.notepadapp.view.formulario.FormularioActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private var adapter: MainListAdapter? = null
 
 
+    val FORMULARIO_REQUEST_CODE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,10 +43,35 @@ class MainActivity : AppCompatActivity() {
 
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val formularioIntent = Intent(this, FormularioActivity::class.java)
+
+            startActivityForResult(formularioIntent, FORMULARIO_REQUEST_CODE)
         }
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode) {
+            FORMULARIO_REQUEST_CODE
+
+
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    mainViewModel.buscarTodos()
+                }
+                Activity.RESULT_CANCELED -> {
+                    Toast.makeText(this, "Cancelou", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+
+
+
+
+    }
+
 
 
     private var notasObserver = Observer<List<Nota>> {
@@ -49,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var loadingObserver = Observer<Boolean> {
-        if(it == true) {
+        if (it == true) {
             containerLoading.visibility = View.VISIBLE
         } else {
             containerLoading.visibility = View.INVISIBLE
@@ -78,4 +108,5 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 }
